@@ -18,6 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -34,7 +35,7 @@ public class TaskController {
     public ResponseEntity<?> getUserTasks(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         List<Task> tasks = taskService.getUserTasks(userDetails.getUser());
         Map<String, Object> response = new HashMap<>();
-        response.put("tasks", tasks.stream().map(this::toTaskResponse).toList());
+        response.put("tasks", tasks.stream().map(this::toTaskResponse).collect(Collectors.toList()));
         response.put("cognitiveLoad", taskService.getCognitiveLoad(userDetails.getUser()));
         return ResponseEntity.ok(response);
     }
@@ -144,7 +145,7 @@ public class TaskController {
         if (payload.containsKey("tags")) {
             Object tagsValue = payload.get("tags");
             if (tagsValue instanceof List) {
-                task.setTags(String.join(",", ((List<?>) tagsValue).stream().map(String::valueOf).toList()));
+                task.setTags(String.join(",", ((List<?>) tagsValue).stream().map(String::valueOf).collect(Collectors.toList())));
             } else {
                 task.setTags(asString(tagsValue));
             }
@@ -202,7 +203,7 @@ public class TaskController {
         return List.of(tags.split(",")).stream()
             .map(String::trim)
             .filter(value -> !value.isBlank())
-            .toList();
+            .collect(Collectors.toList());
     }
 
     private String extractProofFileName(String proofUrl) {
