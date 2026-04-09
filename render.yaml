@@ -1,0 +1,34 @@
+services:
+  - type: web
+    name: timelysync-backend
+    runtime: java
+    rootDir: timelysync-backend/timelysync-backend
+    buildCommand: mvn clean package -DskipTests
+    startCommand: java -jar target/timelysync-backend-1.0.0.jar
+    plan: free
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: TIMELYSYNC_CORS_ALLOWED_ORIGINS
+        sync: false
+      - key: MAIL_HOST
+        value: smtp.gmail.com
+      - key: MAIL_PORT
+        value: "587"
+      - key: MAIL_USERNAME
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false
+
+  - type: web
+    name: timelysync-frontend
+    runtime: node
+    rootDir: timelysyncc-frontend
+    buildCommand: npm run build:enhancements
+    startCommand: npm start
+    plan: free
+    envVars:
+      - key: API_BASE_URL
+        sync: false

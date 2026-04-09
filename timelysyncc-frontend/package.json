@@ -1,0 +1,9 @@
+{
+  "name": "timelysyncc-frontend-static",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build:enhancements": "node scripts/build-enhancements.js",
+    "start": "node server.js"
+  }
+}
