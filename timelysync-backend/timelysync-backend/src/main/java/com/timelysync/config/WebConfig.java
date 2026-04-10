@@ -14,12 +14,20 @@ public class WebConfig implements WebMvcConfigurer {
     
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-            .allowedOrigins(parseAllowedOrigins())
+        String[] origins = parseAllowedOrigins();
+        boolean hasWildcard = java.util.Arrays.asList(origins).contains("*");
+        
+        var registration = registry.addMapping("/**")
             .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
             .allowedHeaders("*")
             .allowCredentials(true)
             .maxAge(3600);
+            
+        if (hasWildcard) {
+            registration.allowedOriginPatterns("*");
+        } else {
+            registration.allowedOrigins(origins);
+        }
     }
     
     @Override
